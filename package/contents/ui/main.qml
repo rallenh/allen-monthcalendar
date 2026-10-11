@@ -52,7 +52,7 @@ PlasmoidItem {
     readonly property bool adapt: Plasmoid.configuration.adaptColors && lightBackground
     readonly property color otherMonthColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 4.5)) : withAlpha(accentColor, 0.63)
     readonly property color weekNumberColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 3.0)) : withAlpha(accentColor, 0.39)
-    readonly property color eventDayColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(eventColor, wallpaperAverage, 3.0)) : withAlpha(eventColor, 0.39)
+    readonly property color eventDayColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(eventColor, wallpaperAverage, 3.0)) : eventColor
 
     function withAlpha(c, a) {
         return Qt.rgba(c.r, c.g, c.b, a);

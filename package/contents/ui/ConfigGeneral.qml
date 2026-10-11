@@ -188,8 +188,8 @@ KCM.SimpleKCM {
             }
             QQC.Button {
                 text: i18n("Default")
-                enabled: cfg_eventColor !== "#aaaaaa"
-                onClicked: cfg_eventColor = "#aaaaaa"
+                enabled: cfg_eventColor !== "#ff8c1a"
+                onClicked: cfg_eventColor = "#ff8c1a"
             }
         }
     }

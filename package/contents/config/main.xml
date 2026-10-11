@@ -27,9 +27,10 @@
     <entry name="adaptColors" type="Bool">
       <default>true</default>
     </entry>
-    <!-- Colour for days with events (Rainmeter style: 170,170,170 at 39 %) -->
+    <!-- Colour for days with events: its own hue so they stand out on light and dark wallpapers
+         (LuaCalendar dimmed them to grey, which disappears on light wallpapers) -->
     <entry name="eventColor" type="String">
-      <default>#aaaaaa</default>
+      <default>#ff8c1a</default>
     </entry>
   </group>
   <group name="Text">
