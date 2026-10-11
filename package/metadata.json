@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [ { "Name": "Allen Hewes" } ],
+        "Category": "Date and Time",
+        "Description": "Whole month at a glance: week numbers, today highlighted, holidays and other calendar events with tooltips. Flat, see-through, text colour picked for contrast with the wallpaper.",
+        "Icon": "view-calendar-month",
+        "Id": "org.allen.monthcalendar",
+        "License": "GPL-2.0+",
+        "Name": "Month Calendar",
+        "Version": "1.0.0",
+        "Website": "https://github.com/rallenh/allen-monthcalendar"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

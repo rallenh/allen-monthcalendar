@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <!-- Calendar event plugins (Plasma's): holidaysevents, astronomicalevents (moon phases, seasons), alternatecalendar -->
+    <entry name="enabledCalendarPlugins" type="StringList">
+      <default>holidaysevents</default>
+    </entry>
+    <!-- -1 = KDE region default, 0 = Sunday, 1 = Monday, ... -->
+    <entry name="firstDayOfWeek" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="showWeekNumbers" type="Bool">
+      <default>true</default>
+    </entry>
+    <!-- Colour for week numbers, other-month days and today's underline (Rainmeter style: 128,192,255) -->
+    <entry name="accentColor" type="String">
+      <default>#80c0ff</default>
+    </entry>
+    <!-- Colour for days with events (Rainmeter style: 170,170,170 at 39 %) -->
+    <entry name="eventColor" type="String">
+      <default>#aaaaaa</default>
+    </entry>
+  </group>
+  <group name="Text">
+    <!-- "" = the system font -->
+    <entry name="fontFamily" type="String">
+      <default></default>
+    </entry>
+    <!-- Size of the day numbers; everything else (labels, cells, gaps) scales with it -->
+    <entry name="fontPointSize" type="Int">
+      <default>14</default>
+    </entry>
+    <!-- 0 = theme colour, 1 = custom colour, 2 = automatic contrast against the wallpaper -->
+    <entry name="textColorMode" type="Int">
+      <default>2</default>
+    </entry>
+    <entry name="customPrimaryColor" type="String">
+      <default>#ffffff</default>
+    </entry>
+    <!-- 0 = white or near-black, 1 = tinted from the wallpaper's colours -->
+    <entry name="autoContrastStyle" type="Int">
+      <default>0</default>
+    </entry>
+    <!-- Last computed automatic colour, used at start-up before the wallpaper is analysed -->
+    <entry name="autoContrastColor" type="String">
+      <default></default>
+    </entry>
+  </group>
+</kcfg>
