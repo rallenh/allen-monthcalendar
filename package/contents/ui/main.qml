@@ -43,6 +43,17 @@ PlasmoidItem {
     readonly property color accentColor: Plasmoid.configuration.accentColor
     readonly property color eventColor: Plasmoid.configuration.eventColor
 
+    // Accent/event colours that stay readable: on a light wallpaper (dark text) they are darkened, keeping their hue,
+    // to a contrast ratio against the wallpaper; on a dark wallpaper LuaCalendar's colours and transparencies are kept.
+    readonly property bool lightBackground: Contrast.luminance(primaryColor) < 0.4
+    readonly property color wallpaperAverage: Plasmoid.configuration.wallpaperAverageColor !== ""
+                                              ? Plasmoid.configuration.wallpaperAverageColor
+                                              : (lightBackground ? "#c8c8c8" : "#202020")
+    readonly property bool adapt: Plasmoid.configuration.adaptColors && lightBackground
+    readonly property color otherMonthColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 4.5)) : withAlpha(accentColor, 0.63)
+    readonly property color weekNumberColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 3.0)) : withAlpha(accentColor, 0.39)
+    readonly property color eventDayColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(eventColor, wallpaperAverage, 3.0)) : withAlpha(eventColor, 0.39)
+
     function withAlpha(c, a) {
         return Qt.rgba(c.r, c.g, c.b, a);
     }
@@ -169,6 +180,9 @@ PlasmoidItem {
             colour = Contrast.blackOrWhite(background);
         }
         var hex = Contrast.toHex(colour);
+        var average = Contrast.toHex(background);
+        if (Plasmoid.configuration.wallpaperAverageColor !== average)
+            Plasmoid.configuration.wallpaperAverageColor = average;
         autoTextColor = hex;
         if (Plasmoid.configuration.autoContrastColor !== hex)
             Plasmoid.configuration.autoContrastColor = hex;
@@ -291,14 +305,15 @@ PlasmoidItem {
                     y: header.y + header.height + root.gapY
                     width: root.cellWidth
                     height: root.cellHeight
-                    color: root.withAlpha(root.primaryColor, 0.10)
+                    // LuaCalendar\'s faint box behind the labels is optional (off: plain labels in the full text colour)
+                    color: Plasmoid.configuration.weekdayChips ? root.withAlpha(root.primaryColor, 0.10) : "transparent"
 
                     PlasmaComponents.Label {
                         anchors.centerIn: parent
                         font.family: root.fontFamily
                         font.pointSize: root.labelFont.pointSize
                         font.bold: parent.isTodayColumn
-                        color: root.withAlpha(root.primaryColor, 0.59)
+                        color: Plasmoid.configuration.weekdayChips ? root.withAlpha(root.primaryColor, 0.59) : root.primaryColor
                         text: root.dayLabels[parent.index]
                     }
                 }
@@ -317,7 +332,7 @@ PlasmoidItem {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: root.dayFont
-                    color: root.withAlpha(root.accentColor, 0.39)
+                    color: root.weekNumberColor
                     text: modelData
                 }
             }
@@ -348,8 +363,8 @@ PlasmoidItem {
                         font.bold: cell.isToday
                         // LuaCalendar order: today > event day > other month > normal
                         color: cell.isToday ? root.primaryColor
-                             : (cell.hasEvents && cell.inMonth) ? root.withAlpha(root.eventColor, 0.39)
-                             : !cell.inMonth ? root.withAlpha(root.accentColor, 0.63)
+                             : (cell.hasEvents && cell.inMonth) ? root.eventDayColor
+                             : !cell.inMonth ? root.otherMonthColor
                              : root.withAlpha(root.primaryColor, 0.63)
                         text: cell.model.dayNumber
                     }
@@ -361,7 +376,7 @@ PlasmoidItem {
                         anchors.bottom: parent.bottom
                         width: dayMetrics.advanceWidth("88") * 1.1
                         height: Math.max(2, Math.round(dayMetrics.height * 0.08))
-                        color: root.withAlpha(root.accentColor, 0.63)
+                        color: root.otherMonthColor
                     }
 
                     // Event names in a tooltip balloon

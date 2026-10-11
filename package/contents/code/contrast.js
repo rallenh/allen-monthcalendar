@@ -97,3 +97,21 @@ function tinted(background, tintSource, minRatio) {
     }
     return blackOrWhite(background);
 }
+
+/**
+ * The same hue and saturation as colour, with the lightness moved (darker on a light background, lighter on a dark one)
+ * until it reaches minRatio against background. Used to keep accent colours readable on any wallpaper.
+ */
+function adjustToContrast(colour, background, minRatio) {
+    if (ratio(colour, background) >= minRatio)
+        return colour;
+    var dark = blackOrWhite(background) === NEAR_BLACK;
+    var hsl = rgbToHsl(colour);
+    for (var i = 0; i <= 100; i++) {
+        var l = dark ? hsl.l * (1 - i / 100) : hsl.l + (1 - hsl.l) * i / 100;
+        var cand = hslToRgb(hsl.h, hsl.s, l);
+        if (ratio(cand, background) >= minRatio)
+            return cand;
+    }
+    return blackOrWhite(background);
+}

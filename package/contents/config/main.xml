@@ -19,6 +19,14 @@
     <entry name="accentColor" type="String">
       <default>#80c0ff</default>
     </entry>
+    <!-- Shade the weekday labels with a faint box (LuaCalendar style); off: labels in the full text colour -->
+    <entry name="weekdayChips" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- Darken (light wallpaper) or keep (dark wallpaper) the accent and event colours so they stay readable -->
+    <entry name="adaptColors" type="Bool">
+      <default>true</default>
+    </entry>
     <!-- Colour for days with events (Rainmeter style: 170,170,170 at 39 %) -->
     <entry name="eventColor" type="String">
       <default>#aaaaaa</default>
@@ -46,6 +54,10 @@
     </entry>
     <!-- Last computed automatic colour, used at start-up before the wallpaper is analysed -->
     <entry name="autoContrastColor" type="String">
+      <default></default>
+    </entry>
+    <!-- Last measured wallpaper average colour (for adapting accent colours) -->
+    <entry name="wallpaperAverageColor" type="String">
       <default></default>
     </entry>
   </group>

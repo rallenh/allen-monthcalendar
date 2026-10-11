@@ -22,6 +22,9 @@ KCM.SimpleKCM {
     property string cfg_customPrimaryColor
     property int cfg_autoContrastStyle
     property string cfg_autoContrastColor
+    property alias cfg_weekdayChips: weekdayChips.checked
+    property alias cfg_adaptColors: adaptColors.checked
+    property string cfg_wallpaperAverageColor
     property string cfg_accentColor
     property string cfg_eventColor
 
@@ -88,6 +91,11 @@ KCM.SimpleKCM {
             text: i18n("Show week numbers")
         }
 
+        QQC.CheckBox {
+            id: weekdayChips
+            text: i18n("Shade weekday labels (LuaCalendar style)")
+        }
+
         Kirigami.Separator {
             Kirigami.FormData.label: i18n("Colours")
             Kirigami.FormData.isSection: true
@@ -147,6 +155,12 @@ KCM.SimpleKCM {
             checked: cfg_textColorMode === 0
             QQC.ButtonGroup.group: colorModeGroup
             onToggled: if (checked) cfg_textColorMode = 0
+        }
+
+        QQC.CheckBox {
+            id: adaptColors
+            Kirigami.FormData.label: i18n("Accent colours:")
+            text: i18n("Keep readable on light wallpapers (darker, same hue)")
         }
 
         RowLayout {
