@@ -52,6 +52,9 @@ PlasmoidItem {
     readonly property bool adapt: Plasmoid.configuration.adaptColors && lightBackground
     readonly property color otherMonthColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 4.5)) : withAlpha(accentColor, 0.63)
     readonly property color weekNumberColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 3.0)) : withAlpha(accentColor, 0.39)
+    // This month's dates (and the header): LuaCalendar's 63 % on dark wallpapers; stronger on light ones so they stay
+    // ahead of the other-month days in the hierarchy.
+    readonly property real dateAlpha: adapt ? 0.85 : 0.63
     readonly property color eventDayColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(eventColor, wallpaperAverage, 3.0)) : eventColor
 
     function withAlpha(c, a) {
@@ -285,7 +288,7 @@ PlasmoidItem {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font: root.headerFont
-                color: root.withAlpha(root.primaryColor, 0.63)
+                color: root.withAlpha(root.primaryColor, root.dateAlpha)
                 text: Qt.locale().monthName(calendar.month - 1, Locale.ShortFormat) + " - " + calendar.year
 
                 MouseArea {
@@ -365,7 +368,7 @@ PlasmoidItem {
                         color: cell.isToday ? root.primaryColor
                              : (cell.hasEvents && cell.inMonth) ? root.eventDayColor
                              : !cell.inMonth ? root.otherMonthColor
-                             : root.withAlpha(root.primaryColor, 0.63)
+                             : root.withAlpha(root.primaryColor, root.dateAlpha)
                         text: cell.model.dayNumber
                     }
 
