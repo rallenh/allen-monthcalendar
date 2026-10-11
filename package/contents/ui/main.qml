@@ -229,138 +229,148 @@ PlasmoidItem {
     ]
 
     fullRepresentation: Item {
-        id: view
+        id: area
 
-        readonly property real weekColumnWidth: root.showWeekNumbers ? root.cellWidth + root.gapX : 0
-        readonly property real margin: root.gapX * 0.5
+        // The grid keeps its natural size (derived from the font) and is centred in whatever space
+        // the widget gets, e.g. when the widget is resized larger.
+        implicitWidth: view.width
+        implicitHeight: view.height
+        Layout.preferredWidth: view.width
+        Layout.preferredHeight: view.height
+        Layout.minimumWidth: view.width
+        Layout.minimumHeight: view.height
 
-        implicitWidth: margin * 2 + weekColumnWidth + 7 * root.cellWidth + 6 * root.gapX
-        implicitHeight: margin * 2 + header.height + root.gapY + 7 * root.cellHeight + 6 * root.gapY
-        Layout.preferredWidth: implicitWidth
-        Layout.preferredHeight: implicitHeight
-        Layout.minimumWidth: implicitWidth
-        Layout.minimumHeight: implicitHeight
+        Item {
+            id: view
+            anchors.centerIn: parent
 
-        // Mouse wheel changes the month (as in LuaCalendar)
-        WheelHandler {
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-            onWheel: function (event) {
-                if (event.angleDelta.y < 0)
-                    calendar.nextMonth();
-                else if (event.angleDelta.y > 0)
-                    calendar.previousMonth();
-            }
-        }
+            readonly property real weekColumnWidth: root.showWeekNumbers ? root.cellWidth + root.gapX : 0
+            readonly property real margin: root.gapX * 0.5
 
-        // Header: "Oct - 2026"; click it to go back to the current month
-        PlasmaComponents.Label {
-            id: header
-            x: view.margin + view.weekColumnWidth
-            y: view.margin
-            width: 7 * root.cellWidth + 6 * root.gapX
-            height: root.cellHeight
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font: root.headerFont
-            color: root.withAlpha(root.primaryColor, 0.63)
-            text: Qt.locale().monthName(calendar.month - 1, Locale.ShortFormat) + " - " + calendar.year
+            width: margin * 2 + weekColumnWidth + 7 * root.cellWidth + 6 * root.gapX
+            height: margin * 2 + header.height + root.gapY + 7 * root.cellHeight + 6 * root.gapY
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.showCurrentMonth()
-            }
-        }
-
-        // Weekday labels on a faint chip; today's weekday in bold
-        Repeater {
-            model: 7
-            delegate: Rectangle {
-                required property int index
-                readonly property bool isTodayColumn: (root.firstDay + index) % 7 === root.today.getDay()
-                x: view.margin + view.weekColumnWidth + index * (root.cellWidth + root.gapX)
-                y: header.y + header.height + root.gapY
-                width: root.cellWidth
-                height: root.cellHeight
-                color: root.withAlpha(root.primaryColor, 0.10)
-
-                PlasmaComponents.Label {
-                    anchors.centerIn: parent
-                    font.family: root.fontFamily
-                    font.pointSize: root.labelFont.pointSize
-                    font.bold: parent.isTodayColumn
-                    color: root.withAlpha(root.primaryColor, 0.59)
-                    text: root.dayLabels[parent.index]
+            // Mouse wheel changes the month (as in LuaCalendar)
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                onWheel: function (event) {
+                    if (event.angleDelta.y < 0)
+                        calendar.nextMonth();
+                    else if (event.angleDelta.y > 0)
+                        calendar.previousMonth();
                 }
             }
-        }
 
-        // Week numbers (ISO), left column
-        Repeater {
-            model: root.showWeekNumbers ? calendar.weeksModel : []
-            delegate: PlasmaComponents.Label {
-                required property int index
-                required property var modelData
-                x: view.margin
-                y: header.y + header.height + root.gapY + (index + 1) * (root.cellHeight + root.gapY)
-                width: root.cellWidth
+            // Header: "Oct - 2026"; click it to go back to the current month
+            PlasmaComponents.Label {
+                id: header
+                x: view.margin + view.weekColumnWidth
+                y: view.margin
+                width: 7 * root.cellWidth + 6 * root.gapX
                 height: root.cellHeight
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font: root.dayFont
-                color: root.withAlpha(root.accentColor, 0.39)
-                text: modelData
-            }
-        }
+                font: root.headerFont
+                color: root.withAlpha(root.primaryColor, 0.63)
+                text: Qt.locale().monthName(calendar.month - 1, Locale.ShortFormat) + " - " + calendar.year
 
-        // The days: 6 weeks x 7
-        Repeater {
-            model: calendar.daysModel
-            delegate: Item {
-                id: cell
-                required property int index
-                required property var model
-
-                readonly property bool inMonth: model.monthNumber === calendar.month && model.yearNumber === calendar.year
-                readonly property bool isToday: root.isToday(model.yearNumber, model.monthNumber, model.dayNumber)
-                readonly property bool hasEvents: model.eventCount !== undefined && model.eventCount > 0
-
-                x: view.margin + view.weekColumnWidth + (index % 7) * (root.cellWidth + root.gapX)
-                y: header.y + header.height + root.gapY + (Math.floor(index / 7) + 1) * (root.cellHeight + root.gapY)
-                width: root.cellWidth
-                height: root.cellHeight
-
-                PlasmaComponents.Label {
+                MouseArea {
                     anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.showCurrentMonth()
+                }
+            }
+
+            // Weekday labels on a faint chip; today's weekday in bold
+            Repeater {
+                model: 7
+                delegate: Rectangle {
+                    required property int index
+                    readonly property bool isTodayColumn: (root.firstDay + index) % 7 === root.today.getDay()
+                    x: view.margin + view.weekColumnWidth + index * (root.cellWidth + root.gapX)
+                    y: header.y + header.height + root.gapY
+                    width: root.cellWidth
+                    height: root.cellHeight
+                    color: root.withAlpha(root.primaryColor, 0.10)
+
+                    PlasmaComponents.Label {
+                        anchors.centerIn: parent
+                        font.family: root.fontFamily
+                        font.pointSize: root.labelFont.pointSize
+                        font.bold: parent.isTodayColumn
+                        color: root.withAlpha(root.primaryColor, 0.59)
+                        text: root.dayLabels[parent.index]
+                    }
+                }
+            }
+
+            // Week numbers (ISO), left column
+            Repeater {
+                model: root.showWeekNumbers ? calendar.weeksModel : []
+                delegate: PlasmaComponents.Label {
+                    required property int index
+                    required property var modelData
+                    x: view.margin
+                    y: header.y + header.height + root.gapY + (index + 1) * (root.cellHeight + root.gapY)
+                    width: root.cellWidth
+                    height: root.cellHeight
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
-                    font.family: root.fontFamily
-                    font.pointSize: root.basePointSize
-                    font.bold: cell.isToday
-                    // LuaCalendar order: today > event day > other month > normal
-                    color: cell.isToday ? root.primaryColor
-                         : (cell.hasEvents && cell.inMonth) ? root.withAlpha(root.eventColor, 0.39)
-                         : !cell.inMonth ? root.withAlpha(root.accentColor, 0.63)
-                         : root.withAlpha(root.primaryColor, 0.63)
-                    text: cell.model.dayNumber
+                    font: root.dayFont
+                    color: root.withAlpha(root.accentColor, 0.39)
+                    text: modelData
                 }
+            }
 
-                // Today's underline
-                Rectangle {
-                    visible: cell.isToday
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    width: dayMetrics.advanceWidth("88") * 1.1
-                    height: Math.max(2, Math.round(dayMetrics.height * 0.08))
-                    color: root.withAlpha(root.accentColor, 0.63)
-                }
+            // The days: 6 weeks x 7
+            Repeater {
+                model: calendar.daysModel
+                delegate: Item {
+                    id: cell
+                    required property int index
+                    required property var model
 
-                // Event names in a tooltip balloon
-                PlasmaCore.ToolTipArea {
-                    anchors.fill: parent
-                    active: cell.hasEvents
-                    mainText: Qt.formatDate(new Date(cell.model.yearNumber, cell.model.monthNumber - 1, cell.model.dayNumber), Qt.locale().dateFormat(Locale.LongFormat))
-                    subText: cell.hasEvents ? root.eventTitles(cell.model.yearNumber, cell.model.monthNumber, cell.model.dayNumber).join("\n") : ""
+                    readonly property bool inMonth: model.monthNumber === calendar.month && model.yearNumber === calendar.year
+                    readonly property bool isToday: root.isToday(model.yearNumber, model.monthNumber, model.dayNumber)
+                    readonly property bool hasEvents: model.eventCount !== undefined && model.eventCount > 0
+
+                    x: view.margin + view.weekColumnWidth + (index % 7) * (root.cellWidth + root.gapX)
+                    y: header.y + header.height + root.gapY + (Math.floor(index / 7) + 1) * (root.cellHeight + root.gapY)
+                    width: root.cellWidth
+                    height: root.cellHeight
+
+                    PlasmaComponents.Label {
+                        anchors.fill: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.family: root.fontFamily
+                        font.pointSize: root.basePointSize
+                        font.bold: cell.isToday
+                        // LuaCalendar order: today > event day > other month > normal
+                        color: cell.isToday ? root.primaryColor
+                             : (cell.hasEvents && cell.inMonth) ? root.withAlpha(root.eventColor, 0.39)
+                             : !cell.inMonth ? root.withAlpha(root.accentColor, 0.63)
+                             : root.withAlpha(root.primaryColor, 0.63)
+                        text: cell.model.dayNumber
+                    }
+
+                    // Today's underline
+                    Rectangle {
+                        visible: cell.isToday
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                        width: dayMetrics.advanceWidth("88") * 1.1
+                        height: Math.max(2, Math.round(dayMetrics.height * 0.08))
+                        color: root.withAlpha(root.accentColor, 0.63)
+                    }
+
+                    // Event names in a tooltip balloon
+                    PlasmaCore.ToolTipArea {
+                        anchors.fill: parent
+                        active: cell.hasEvents
+                        mainText: Qt.formatDate(new Date(cell.model.yearNumber, cell.model.monthNumber - 1, cell.model.dayNumber), Qt.locale().dateFormat(Locale.LongFormat))
+                        subText: cell.hasEvents ? root.eventTitles(cell.model.yearNumber, cell.model.monthNumber, cell.model.dayNumber).join("\n") : ""
+                    }
                 }
             }
         }
