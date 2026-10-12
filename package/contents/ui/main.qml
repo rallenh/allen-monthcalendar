@@ -51,7 +51,12 @@ PlasmoidItem {
                                               : (lightBackground ? "#c8c8c8" : "#202020")
     readonly property bool adapt: Plasmoid.configuration.adaptColors && lightBackground
     readonly property color otherMonthColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 4.5)) : withAlpha(accentColor, 0.63)
-    readonly property color weekNumberColor: adapt ? Contrast.toHex(Contrast.adjustToContrast(accentColor, wallpaperAverage, 3.0)) : withAlpha(accentColor, 0.39)
+    // Week numbers: own colour (or the accent), faded by the strength setting. On dark wallpapers 70 % gives
+    // LuaCalendar's 39 % transparency.
+    readonly property color weekNumberBase: Plasmoid.configuration.weekNumberColor !== "" ? Plasmoid.configuration.weekNumberColor : accentColor
+    readonly property real weekNumberStrength: Plasmoid.configuration.weekNumberStrength / 100
+    readonly property color weekNumberColor: adapt ? withAlpha(Qt.color(Contrast.toHex(Contrast.adjustToContrast(weekNumberBase, wallpaperAverage, 3.0))), weekNumberStrength)
+                                                   : withAlpha(weekNumberBase, weekNumberStrength * 0.56)
     // This month's dates (and the header): LuaCalendar's 63 % on dark wallpapers; stronger on light ones so they stay
     // ahead of the other-month days in the hierarchy.
     readonly property real dateAlpha: adapt ? 0.85 : 0.63
@@ -68,7 +73,12 @@ PlasmoidItem {
     readonly property font labelFont: Qt.font({ family: fontFamily, pointSize: basePointSize * 0.86 })   // Rainmeter: 12 vs 14
     readonly property font headerFont: Qt.font({ family: fontFamily, pointSize: basePointSize })
 
+    readonly property font weekFont: Qt.font({ family: fontFamily,
+                                               pointSize: basePointSize * (Plasmoid.configuration.weekNumberSmaller ? 0.8 : 1),
+                                               italic: Plasmoid.configuration.weekNumberItalic })
+
     FontMetrics { id: dayMetrics; font: root.dayFont }
+    FontMetrics { id: weekMetrics; font: root.weekFont }
     FontMetrics { id: labelMetrics; font: root.labelFont }
 
     // Day labels from the locale ("Sun", "Mon", ...), in week order
@@ -333,8 +343,10 @@ PlasmoidItem {
                     width: root.cellWidth
                     height: root.cellHeight
                     horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font: root.dayFont
+                    // on the dates' baseline, also when smaller
+                    verticalAlignment: Text.AlignTop
+                    topPadding: (root.cellHeight - dayMetrics.height) / 2 + dayMetrics.ascent - weekMetrics.ascent
+                    font: root.weekFont
                     color: root.weekNumberColor
                     text: modelData
                 }

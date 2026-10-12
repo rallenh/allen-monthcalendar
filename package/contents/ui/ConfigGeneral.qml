@@ -18,6 +18,10 @@ KCM.SimpleKCM {
     property alias cfg_fontPointSize: fontPointSize.value
     property int cfg_firstDayOfWeek
     property alias cfg_showWeekNumbers: showWeekNumbers.checked
+    property alias cfg_weekNumberStrength: weekNumberStrength.value
+    property string cfg_weekNumberColor
+    property alias cfg_weekNumberSmaller: weekNumberSmaller.checked
+    property alias cfg_weekNumberItalic: weekNumberItalic.checked
     property int cfg_textColorMode
     property string cfg_customPrimaryColor
     property int cfg_autoContrastStyle
@@ -89,6 +93,49 @@ KCM.SimpleKCM {
         QQC.CheckBox {
             id: showWeekNumbers
             text: i18n("Show week numbers")
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Week number strength:")
+            enabled: showWeekNumbers.checked
+            QQC.Slider {
+                id: weekNumberStrength
+                from: 30
+                to: 100
+                stepSize: 5
+                snapMode: QQC.Slider.SnapAlways
+            }
+            QQC.Label {
+                text: i18n("%1 %", weekNumberStrength.value)
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Week number colour:")
+            enabled: showWeekNumbers.checked
+            KQControls.ColorButton {
+                color: cfg_weekNumberColor !== "" ? cfg_weekNumberColor : cfg_accentColor
+                showAlphaChannel: false
+                dialogTitle: i18n("Week number colour")
+                onAccepted: function (colour) { cfg_weekNumberColor = colour.toString(); }
+            }
+            QQC.Button {
+                text: i18n("Same as accent")
+                enabled: cfg_weekNumberColor !== ""
+                onClicked: cfg_weekNumberColor = ""
+            }
+        }
+
+        QQC.CheckBox {
+            id: weekNumberSmaller
+            enabled: showWeekNumbers.checked
+            text: i18n("Smaller week numbers (80 %)")
+        }
+
+        QQC.CheckBox {
+            id: weekNumberItalic
+            enabled: showWeekNumbers.checked
+            text: i18n("Italic week numbers")
         }
 
         QQC.CheckBox {
