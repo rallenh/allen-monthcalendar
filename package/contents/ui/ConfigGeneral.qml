@@ -18,6 +18,7 @@ KCM.SimpleKCM {
     property alias cfg_fontPointSize: fontPointSize.value
     property int cfg_firstDayOfWeek
     property alias cfg_showWeekNumbers: showWeekNumbers.checked
+    property alias cfg_fullMonthName: fullMonthName.checked
     property alias cfg_weekNumberStrength: weekNumberStrength.value
     property string cfg_weekNumberColor
     property alias cfg_weekNumberSmaller: weekNumberSmaller.checked
@@ -88,6 +89,12 @@ KCM.SimpleKCM {
             }))
             currentIndex: model.findIndex(item => item.day === cfg_firstDayOfWeek)
             onActivated: index => cfg_firstDayOfWeek = model[index].day
+        }
+
+        QQC.CheckBox {
+            id: fullMonthName
+            Kirigami.FormData.label: i18n("Header:")
+            text: i18n("Full month name (\"October 2026\" instead of \"Oct 2026\")")
         }
 
         QQC.CheckBox {

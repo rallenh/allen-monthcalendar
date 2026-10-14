@@ -299,7 +299,8 @@ PlasmoidItem {
                 verticalAlignment: Text.AlignVCenter
                 font: root.headerFont
                 color: root.withAlpha(root.primaryColor, root.dateAlpha)
-                text: Qt.locale().monthName(calendar.month - 1, Locale.ShortFormat) + " - " + calendar.year
+                text: Qt.locale().monthName(calendar.month - 1, Plasmoid.configuration.fullMonthName ? Locale.LongFormat : Locale.ShortFormat)
+                      + " " + calendar.year
 
                 MouseArea {
                     anchors.fill: parent

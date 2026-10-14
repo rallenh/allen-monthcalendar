@@ -8,7 +8,7 @@
         "Id": "org.allen.monthcalendar",
         "License": "GPL-2.0+",
         "Name": "Month Calendar",
-        "Version": "0.2.0",
+        "Version": "0.3.0",
         "Website": "https://github.com/rallenh/allen-monthcalendar"
     },
     "X-Plasma-API-Minimum-Version": "6.0"

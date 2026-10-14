@@ -22,14 +22,15 @@ size scales the whole grid and keeps its proportions.
 - One font family and one size for everything (font dialog in the settings); see-through, no background, no shadows.
 - Week numbers: adjustable strength (default 70 %, fading toward the wallpaper), their own colour, and optionally
   smaller (80 %, on the dates' baseline; on by default) and italic, so they aren't mistaken for dates.
+- Header: short ("Oct 2026") or full ("October 2026") month name, from the locale.
 - Mouse wheel: previous/next month. Click the header: back to the current month. Right-click: month/year navigation.
 - No timers ticking: redraws at midnight and when navigating.
 
 ## Install
 From a `.plasmoid` file:
 ```sh
-kpackagetool6 -t Plasma/Applet -i org.allen.monthcalendar-v0.2.0.plasmoid    # first install
-kpackagetool6 -t Plasma/Applet -u org.allen.monthcalendar-v0.2.0.plasmoid    # upgrade
+kpackagetool6 -t Plasma/Applet -i org.allen.monthcalendar-v0.3.0.plasmoid    # first install
+kpackagetool6 -t Plasma/Applet -u org.allen.monthcalendar-v0.3.0.plasmoid    # upgrade
 systemctl --user restart plasma-plasmashell
 ```
 From a clone of this repo:
@@ -48,7 +49,7 @@ kpackagetool6 -t Plasma/Applet -s org.allen.monthcalendar | grep -i version
 ## Build a `.plasmoid`
 A `.plasmoid` is a zip of the `package` folder:
 ```sh
-cd package && zip -r ../org.allen.monthcalendar-v0.2.0.plasmoid . && cd ..
+cd package && zip -r ../org.allen.monthcalendar-v0.3.0.plasmoid . && cd ..
 ```
 
 ## Release steps

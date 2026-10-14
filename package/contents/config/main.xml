@@ -18,6 +18,10 @@
     <!-- Week numbers: strength in % (fades toward the wallpaper; 100 = as strong as the accent colour),
          own colour ("" = the accent colour), smaller size (80 %, on the dates' baseline) and italic,
          so they aren't mistaken for dates (weeks 1-31) -->
+    <!-- Month name in the header: false = short ("Oct 2026"), true = full ("October 2026"); locale names (CLDR) -->
+    <entry name="fullMonthName" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="weekNumberStrength" type="Int">
       <default>70</default>
     </entry>
